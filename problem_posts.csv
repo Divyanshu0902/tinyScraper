@@ -1,0 +1,50 @@
+subreddit,title,text,score,comments,url,is_problem,theme
+hackernews,"Show HN: Yori – Isolating AI Logic into ""Semantic Containers"" (Docker for Code)","Hi HN,
+I&#x27;ve been a developer for some time now, and like many of you, I&#x27;ve been frustrated by the &quot;All-or-Nothing&quot; problem with AI coding tools.<p>You ask an AI to fix a bug or implement a function, and it rewrites the whole file. It changes your imports, renames your variables, or deletes comments it deems unnecessary. It’s like giving a junior developer (like me) root access to your production server just to change a config file.<p>So, 29 days ago, I started building Yori to solve the trust problem.<p>The Concept: Semantic Containers
+Yori introduces a syntax that acts like a firewall for AI. You define a $${ ... }$$ block inside a text file.<p>Outside the block (The Host): Your manual code, architecture, and structure. The AI cannot touch this.
+Inside the block (The Container): You write natural language intent. The AI can only generate code here.<p>Example: myutils.md<p>```cpp
+EXPORT: &quot;myfile.cpp&quot;<p>&#x2F;&#x2F; My manual architecture - AI cannot change this
+#include &quot;utils.h&quot;<p>void process_data() {
+    &#x2F;&#x2F; Container: The AI is sandboxed here, but inherits the rest of the file as context
+    $${
+      Sort the incoming data vector using quicksort.
+      Filter out negative numbers.
+      Print the result.
+    }$$ 
+}
+EXPORT: END
+```
+How it works:
+Yori is a C++ wrapper that parses these files. Whatever is within the EXPORT block and outside the containers ($${ }$$) will be copied as it is. When you run `yori myutils.md -make -series`, it sends the prompts to a local (Ollama) or cloud LLM, generates the syntax, fills the blocks, and compiles the result using your native toolchain (GCC&#x2F;Clang&#x2F;Python).<p>If compilation fails, it feeds the error back to the LLM in a retry loop (self-healing).<p>Why I think this matters:<p>1. Safety: You stop giving AI &quot;root access&quot; to your files.<p>2. Intent as Source: The prompt stays in the file. If you want to port your logic from C++ to Rust, you keep the prompts and just change the compile target.<p>3. Incremental Builds (to be added soon): Named containers allow for caching. If the prompt hasn&#x27;t changed, you don&#x27;t pay for an API call.<p>It’s open source (MIT), C++17, and works locally.<p>I’d love feedback on the &quot;Semantic Container&quot; concept. Is this the abstraction layer we&#x27;ve been missing for AI coding? Let me hear your ideas. Also, if you can&#x27;t run yori.exe tell what went wrong and we see how to fix it. I opened a github issue on this. I am also working in making documentation for the project (github wiki). So expect that soon.<p>GitHub: https:&#x2F;&#x2F;github.com&#x2F;alonsovm44&#x2F;yori<p>Thanks!",3,0,,True,other
+hackernews,"Ask HN: Better hardware means OpenAI, Anthropic, etc. are doomed in the future?","This is something I don&#x27;t understand, how will all these AI-as-a-service companies survive in the future when hardware gets better and people are able to run LLMs locally? Of course right now the rent vs. buy equation is heavily tilted towards rent, but eventually I could see people buying a desktop they keep at home, and having all their personal inference running on that one machine. Or even having inference pools to distribute load among many people.<p>do you think what this is possible, and what are these companies plans in that event?",2,0,,True,other
+hackernews,Private-equity barons have a giant AI problem,Private-equity barons have a giant AI problem,1,0,https://www.economist.com/business/2026/02/12/private-equity-barons-have-a-giant-ai-problem,True,other
+hackernews,Show HN: Wip – Monitor AI agent commits and local Git state from the CLI,"wip is a CLI tool that scans your git repos and passively detects AI agent activity from git signals — commit authors, branch naming patterns — then surfaces it alongside your own work: dirty files, stashes,
+  branches, ahead&#x2F;behind status.<p><pre><code>  The problem: AI coding agents (Claude, Copilot, Cursor, Devin) push commits, create branches, and open PRs across your repos. You come back and have no idea what changed. wip gives you that picture in one
+  command.
+
+  Features:
+  - Agent detection with active&#x2F;recent&#x2F;stale status
+  - AI-powered narrative briefings (Anthropic, OpenAI, Gemini)
+  - WIP task tracker linked to repos
+  - JSON output for scripting
+  - Local-first, no telemetry
+
+  Built the whole thing with Claude Code (Opus 4.6) in about 5 hours, idea to PyPI. Python 3.9+, MIT licensed.
+
+  GitHub: github.com&#x2F;drmnaik&#x2F;wip
+  PyPI: pypi.org&#x2F;project&#x2F;wip-cli
+
+  Would love feedback — especially on what signals you&#x27;d want detected beyond commit authors and branch prefixes.</code></pre>",2,0,https://github.com/drmnaik/wip,True,other
+hackernews,Show HN: MicroGPT in 243 Lines – Demystifying the LLM Black Box,"The release of microgpt by Andrej Karpathy is a foundational moment for AI transparency. In exactly 243 lines of pure, dependency-free Python, Karpathy has implemented the complete GPT algorithm from scratch. As a PhD scholar investigating AI and Blockchain, I see this as the ultimate tool for moving beyond the &quot;black box&quot; narrative of Large Language Models (LLMs).<p>The Architecture of Simplicity
+Unlike modern frameworks that hide complexity behind optimized CUDA kernels, microgpt exposes the raw mathematical machinery. The code implements:<p>The Autograd Engine: A custom Value class that handles the recursive chain rule for backpropagation without any external libraries.<p>GPT-2 Primitives: Atomic implementations of RMSNorm, Multi-head Attention, and MLP blocks, following the GPT-2 lineage with modernizations like ReLU.<p>The Adam Optimizer: A pure Python version of the Adam optimizer, proving that the &quot;magic&quot; of training is just well-orchestrated calculus.<p>The Shift to the Edge: Privacy, Latency, and Power
+For my doctoral research at Woxsen University, this codebase serves as a blueprint for the future of Edge AI. As we move away from centralized, massive server farms, the ability to run &quot;atomic&quot; LLMs directly on hardware is becoming a strategic necessity. Karpathy&#x27;s implementation provides empirical clarity on how we can incorporate on-device MicroGPTs to solve three critical industry challenges:<p>Better Latency: By eliminating the round-trip to the cloud, on-device models enable real-time inference. Understanding these 243 lines allows researchers to optimize the &quot;atomic&quot; core specifically for edge hardware constraints.<p>Data Protection &amp; Privacy: In a world where data is the new currency, processing information locally on the user&#x27;s device ensures that sensitive inputs never leave the personal ecosystem, fundamentally aligning with modern data sovereignty standards.<p>Mastering the Primitives: For Technical Product Managers, this project proves that &quot;intelligence&quot; doesn&#x27;t require a dependency-heavy stack. We can now envision lightweight, specialized agents that are fast, private, and highly efficient.<p>Karpathy’s work reminds us that to build the next generation of private, edge-native AI products, we must first master the fundamentals that fit on a single screen of code. The future is moving toward decentralized, on-device intelligence built on these very primitives.
+Link:<p><a href=""https:&#x2F;&#x2F;blog.saimadugula.com&#x2F;posts&#x2F;microgpt-black-box.html"" rel=""nofollow"">https:&#x2F;&#x2F;blog.saimadugula.com&#x2F;posts&#x2F;microgpt-black-box.html</a>",3,0,,True,transport
+hackernews,Richard Carrington's first portrait has been found,Richard Carrington's first portrait has been found,2,0,https://www.cnn.com/2026/02/12/science/solar-storm-richard-carrington-photo,True,other
+hackernews,Ask HN: What makes an AI agent framework production-ready vs. a toy?,"I&#x27;ve been evaluating AI agent frameworks (LangChain, CrewAI, AutoGPT, OpenClaw, etc.) and I&#x27;m trying to figure out what separates the ones that actually work in production from the ones that are fun demos.<p>My current checklist for &quot;production-ready&quot;:<p>1. Persistent memory across sessions (not just in-context window stuffing)
+2. Real tool use with error recovery (file I&#x2F;O, shell, browser, APIs)
+3. Multi-model support (swap between Claude, GPT, local models without rewriting)
+4. Extensibility via a skill&#x2F;plugin system rather than hardcoded chains
+5. Runs as a daemon&#x2F;service, not just a CLI you invoke manually
+6. Security boundaries — sandboxing, permission models, audit logs<p>What I&#x27;ve noticed is most frameworks nail 1-2 of these but fall apart on the rest. The ones built for demos tend to have flashy UIs but break when you try to run them unattended for a week.<p>What&#x27;s your checklist? What patterns have you seen that separate real agent infrastructure from weekend projects?",5,0,,True,other
+hackernews,Electronic Structure: Electron Spin: Videos and Practice Problems,Electronic Structure: Electron Spin: Videos and Practice Problems,1,0,https://www.pearson.com/channels/gob/learn/jules/ch-2-atoms-and-the-periodic-table/electronic-structure-electron-spin,True,other
+hackernews,"Why Couples Fight in the Kitchen (A Furniture Problem, Not a Marriage Problem)","Why Couples Fight in the Kitchen (A Furniture Problem, Not a Marriage Problem)",5,0,https://oedmethod.substack.com/p/why-couples-fight-in-the-kitchen,True,other
